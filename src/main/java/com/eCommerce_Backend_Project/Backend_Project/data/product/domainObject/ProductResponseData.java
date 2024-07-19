@@ -1,24 +1,24 @@
-package com.eCommerce_Backend_Project.Backend_Project.data.dto;
+package com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.domainObject.ProductResponseData;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
 
 import java.math.BigDecimal;
 
-public class AllProductResponseDto {
+public class ProductResponseData {
     private Integer pid;
     private String name;
     private String description;
     private String imageUrl;
     private BigDecimal price;
-    private boolean hasStock;
+    private Integer stock;
 
-    public  AllProductResponseDto(ProductResponseData data){
-        this.pid = data.getPid();
-        this.name = data.getName();
-        this.description = data.getDescription();
-        this.imageUrl = data.getImageUrl();
-        this.price = data.getPrice();
-        this.hasStock = data.getStock() > 0;
+    public ProductResponseData(ProductEntity entity){
+        this.pid = entity.getPid();
+        this.name = entity.getName();
+        this.description = entity.getDescription();
+        this.imageUrl = entity.getImageUrl();
+        this.price = entity.getPrice();
+        this.stock = entity.getStock();
     }
 
     public Integer getPid() {
@@ -61,11 +61,11 @@ public class AllProductResponseDto {
         this.price = price;
     }
 
-    public boolean isHasStock() {
-        return hasStock;
+    public Integer getStock() {
+        return stock;
     }
 
-    public void setHasStock(boolean hasStock) {
-        this.hasStock =hasStock;
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 }

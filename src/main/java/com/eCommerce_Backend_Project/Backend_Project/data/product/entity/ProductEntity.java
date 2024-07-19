@@ -1,8 +1,10 @@
-package com.eCommerce_Backend_Project.Backend_Project.data.entity;
+package com.eCommerce_Backend_Project.Backend_Project.data.product.entity;
 
+import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -26,6 +28,17 @@ public class ProductEntity {
 
     @Column(name = "stock", nullable = false)
     private Integer stock;
+
+//    @OneToMany(mappedBy = "product")
+//    private List<CartItemEntity> cartItemProductList;
+
+//    public List<CartItemEntity> getCartItemProductList() {
+//        return cartItemProductList;
+//    }
+//
+//    public void setCartItemProductList(List<CartItemEntity> cartItemProductList) {
+//        this.cartItemProductList = cartItemProductList;
+//    }
 
     public ProductEntity(){
 

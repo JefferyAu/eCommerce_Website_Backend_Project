@@ -1,7 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.service.impl;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.domainObject.ProductResponseData;
-import com.eCommerce_Backend_Project.Backend_Project.data.entity.ProductEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
 import com.eCommerce_Backend_Project.Backend_Project.exception.ProductNotFoundException;
 import com.eCommerce_Backend_Project.Backend_Project.repository.ProductRepository;
 import com.eCommerce_Backend_Project.Backend_Project.service.ProductService;
@@ -46,9 +46,14 @@ public class ProductServiceImpl implements ProductService {
 
     public ProductEntity findBypid(Integer id){
         Optional<ProductEntity> productEntitylsit = productRepository.findBypid(id);
-        if(productEntitylsit.isEmpty()){
-            throw new ProductNotFoundException(id);
+        try{
+            if(productEntitylsit.isEmpty()){
+                throw new ProductNotFoundException(id);
+            }
+            return productEntitylsit.get();
+        }catch (Exception ex){
+            logger.warn(ex.getMessage());
+            throw  ex;
         }
-        return productEntitylsit.get();
     }
 }

@@ -1,8 +1,8 @@
 package com.eCommerce_Backend_Project.Backend_Project.Api;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.domainObject.ProductResponseData;
-import com.eCommerce_Backend_Project.Backend_Project.data.dto.AllProductResponseDto;
-import com.eCommerce_Backend_Project.Backend_Project.data.dto.ProductResponseDto;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.AllProductResponseDto;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.ProductResponseDto;
 import com.eCommerce_Backend_Project.Backend_Project.service.ProductService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

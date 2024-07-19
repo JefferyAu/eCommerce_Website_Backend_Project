@@ -1,25 +1,24 @@
-package com.eCommerce_Backend_Project.Backend_Project.data.domainObject;
+package com.eCommerce_Backend_Project.Backend_Project.data.product.dto;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.entity.ProductEntity;
-import jakarta.persistence.Column;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
 
 import java.math.BigDecimal;
 
-public class ProductResponseData {
+public class AllProductResponseDto {
     private Integer pid;
     private String name;
     private String description;
     private String imageUrl;
     private BigDecimal price;
-    private Integer stock;
+    private boolean hasStock;
 
-    public ProductResponseData(ProductEntity entity){
-        this.pid = entity.getPid();
-        this.name = entity.getName();
-        this.description = entity.getDescription();
-        this.imageUrl = entity.getImageUrl();
-        this.price = entity.getPrice();
-        this.stock = entity.getStock();
+    public  AllProductResponseDto(ProductResponseData data){
+        this.pid = data.getPid();
+        this.name = data.getName();
+        this.description = data.getDescription();
+        this.imageUrl = data.getImageUrl();
+        this.price = data.getPrice();
+        this.hasStock = data.getStock() > 0;
     }
 
     public Integer getPid() {
@@ -62,11 +61,11 @@ public class ProductResponseData {
         this.price = price;
     }
 
-    public Integer getStock() {
-        return stock;
+    public boolean isHasStock() {
+        return hasStock;
     }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
+    public void setHasStock(boolean hasStock) {
+        this.hasStock =hasStock;
     }
 }
