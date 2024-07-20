@@ -10,6 +10,6 @@ import java.util.Optional;
 
 public interface CartItemRepository extends CrudRepository<CartItemEntity, Integer> {
     Optional<CartItemEntity> findByProductAndUser(ProductEntity product, UserEntity user);
-
     List<CartItemEntity> findAllByUser(UserEntity userEntity);
+    Optional<CartItemEntity> findByProduct(ProductEntity product);
 }

@@ -58,6 +58,37 @@ public class CartItemServiceImpl implements CartItemService {
 
         return cartItemResponseDataList;
     }
+    @Override
+    @Transactional
+    public CartItemResponseData updateCartItem(FirebaseUserData firebaseUserData, Integer pid, Integer quantity){
+
+        try{
+            UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
+            ProductEntity productEntity = productService.findBypid(pid);
+
+            CartItemEntity cartItemEntity = findByProductAndUser(productEntity,loginUser);
+            cartItemEntity.setQuantity(quantity);
+            validateQuantity(cartItemEntity.getQuantity(),productEntity.getStock());
+            CartItemResponseData cartItemResponseData = new CartItemResponseData(cartItemEntity);
+            return cartItemResponseData;
+        }catch (Exception ex){
+            logger.warn("Update Cart Item: " + ex.getMessage());
+            throw ex;
+        }
+    }
+
+    public void deleteCartItem(FirebaseUserData firebaseUserData, Integer pid){
+        try {
+            UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
+            ProductEntity productEntity = productService.findBypid(pid);
+            CartItemEntity cartItemEntity = findByProductAndUser(productEntity,loginUser);
+            cartItemRepository.delete(cartItemEntity);
+        }catch (Exception ex){
+            logger.warn("Delete Cart Item: " + ex.getMessage());
+            throw ex;
+        }
+
+    }
 
     @Override
     @Transactional
@@ -95,5 +126,14 @@ public class CartItemServiceImpl implements CartItemService {
         if(quantity > stock){
             throw new CartItemException("Quantity must be smaller than stock");
         }
+    }
+
+    public CartItemEntity findByProductAndUser(ProductEntity productEntity,UserEntity loginUser){
+        Optional<CartItemEntity> cartItemEntityOptional = cartItemRepository.findByProductAndUser(productEntity,loginUser);
+
+        if(cartItemEntityOptional.isEmpty()){
+            throw new CartItemException("Product is not exist in Cart");
+        }
+        return cartItemEntityOptional.get();
     }
 }

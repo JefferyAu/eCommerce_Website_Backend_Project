@@ -4,6 +4,7 @@ import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.requ
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.domainObject.CartItemResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.dto.CartItemResponseDto;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.dto.SuccessCatItemResponseDto;
+import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
 import com.eCommerce_Backend_Project.Backend_Project.service.CartItemService;
 import com.eCommerce_Backend_Project.Backend_Project.service.ProductService;
 import com.eCommerce_Backend_Project.Backend_Project.util.JwtUtil;
@@ -32,6 +33,24 @@ public class CartItemApi {
                             @PathVariable @Positive Integer quantity){
         FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
         cartItemService.putCartItem(pid, quantity,firebaseUserData);
+        return new SuccessCatItemResponseDto();
+    }
+
+    @PatchMapping("/{pid}/{quantity}")
+    public CartItemResponseDto updateCartItem(JwtAuthenticationToken jwt,
+                               @PathVariable Integer pid,
+                               @PathVariable @Positive Integer quantity){
+        FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
+        CartItemResponseData cartItemResponseData = cartItemService.updateCartItem(firebaseUserData,pid,quantity);
+        CartItemResponseDto cartItemResponseDto = new CartItemResponseDto(cartItemResponseData);
+        return cartItemResponseDto;
+    }
+
+    @DeleteMapping("/{pid}")
+    public SuccessCatItemResponseDto deleteCartItem(JwtAuthenticationToken jwt,
+                               @PathVariable Integer pid){
+        FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
+        cartItemService.deleteCartItem(firebaseUserData,pid);
         return new SuccessCatItemResponseDto();
     }
 
