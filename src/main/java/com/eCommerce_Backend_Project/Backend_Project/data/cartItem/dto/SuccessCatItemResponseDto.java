@@ -3,8 +3,8 @@ package com.eCommerce_Backend_Project.Backend_Project.data.cartItem.dto;
 public class SuccessCatItemResponseDto {
     private String result;
 
-    public SuccessCatItemResponseDto(String result){
-        this.result = result;
+    public SuccessCatItemResponseDto(){
+        setResult("SUCCSS");
     }
 
     public String getResult() {

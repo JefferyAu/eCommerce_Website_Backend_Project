@@ -1,6 +1,6 @@
 package com.eCommerce_Backend_Project.Backend_Project.util;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.FirebaseUserData;
+import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.request.FirebaseUserData;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 public class JwtUtil {

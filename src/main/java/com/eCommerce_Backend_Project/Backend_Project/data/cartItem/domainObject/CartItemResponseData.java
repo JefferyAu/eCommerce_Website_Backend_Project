@@ -1,28 +1,20 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.cartItem.domainObject;
 
+import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.response.UserResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
-import jakarta.persistence.Column;
 
 public class CartItemResponseData {
     private Integer cid;
-    private Integer uid;
+    private UserResponseData user;
     private Integer quantity;
     private ProductResponseData product;
 
     public CartItemResponseData(CartItemEntity cartItemEntity){
         this.cid = cartItemEntity.getCid();
-        this.uid = cartItemEntity.getUid();
+        this.product = new ProductResponseData(cartItemEntity.getProduct());
         this.quantity = cartItemEntity.getQuantity();
-        this.product = new ProductResponseData((cartItemEntity.getProduct()));
-    }
-
-    public ProductResponseData getProduct() {
-        return product;
-    }
-
-    public void setProduct(ProductResponseData product) {
-        this.product = product;
+        this.user = new UserResponseData(cartItemEntity.getUser());
     }
 
     public Integer getCid() {
@@ -33,12 +25,12 @@ public class CartItemResponseData {
         this.cid = cid;
     }
 
-    public Integer getUid() {
-        return uid;
+    public UserResponseData getUser() {
+        return user;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setUser(UserResponseData user) {
+        this.user = user;
     }
 
     public Integer getQuantity() {
@@ -47,5 +39,13 @@ public class CartItemResponseData {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public ProductResponseData getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductResponseData product) {
+        this.product = product;
     }
 }

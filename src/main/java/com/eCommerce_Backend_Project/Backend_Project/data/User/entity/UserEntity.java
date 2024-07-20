@@ -1,6 +1,6 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.User.entity;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.FirebaseUserData;
+import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.request.FirebaseUserData;
 import jakarta.persistence.*;
 
 @Entity

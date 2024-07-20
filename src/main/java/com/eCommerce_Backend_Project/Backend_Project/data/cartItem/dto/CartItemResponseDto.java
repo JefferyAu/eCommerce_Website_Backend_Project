@@ -1,52 +1,72 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.cartItem.dto;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.domainObject.CartItemResponseData;
-import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.ProductResponseDto;
+
+import java.math.BigDecimal;
 
 public class CartItemResponseDto {
-    private Integer cid;
-    private Integer uid;
-    private Integer quantity;
-    private ProductResponseDto product;
+    private Integer pid;
+    private String name;
+    private String imageUrl;
+    private BigDecimal price;
+    private Integer cartQuantity;
+    private Integer stock;
 
 
     public CartItemResponseDto(CartItemResponseData data){
-        this.cid = data.getCid();
-        this.uid = data.getUid();
-        this.quantity = data.getQuantity();
-        this.product = new ProductResponseDto(data.getProduct());
+        this.pid = data.getProduct().getPid();
+        this.name = data.getProduct().getName();
+        this.imageUrl = data.getProduct().getImageUrl();
+        this.price = data.getProduct().getPrice();
+        this.cartQuantity = data.getQuantity();
+        this.stock = data.getProduct().getStock();
     }
 
-    public ProductResponseDto getProduct() {
-        return product;
+    public Integer getCartQuantity() {
+        return cartQuantity;
     }
 
-    public void setProduct(ProductResponseDto product) {
-        this.product = product;
+    public void setCartQuantity(Integer cartQuantity) {
+        this.cartQuantity = cartQuantity;
     }
 
-    public Integer getCid() {
-        return cid;
+    public Integer getPid() {
+        return pid;
     }
 
-    public void setCid(Integer cid) {
-        this.cid = cid;
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 
-
-    public Integer getUid() {
-        return uid;
+    public String getName() {
+        return name;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Integer getQuantity() {
-        return quantity;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 }

@@ -5,8 +5,11 @@ import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartIt
 import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CartItemRepository extends CrudRepository<CartItemEntity, Integer> {
-    Optional<CartItemEntity> findByProductAndUid(ProductEntity product, Integer uid);
+    Optional<CartItemEntity> findByProductAndUser(ProductEntity product, UserEntity user);
+
+    List<CartItemEntity> findAllByUser(UserEntity userEntity);
 }

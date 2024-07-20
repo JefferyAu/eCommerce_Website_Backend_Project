@@ -1,8 +1,6 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.User.entity.UserEntity;
-import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.domainObject.CartItemResponseData;
-import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
 import jakarta.persistence.*;
 
@@ -13,11 +11,9 @@ public class CartItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cid;
 
-    //@Column(name = "pid", nullable = false)
-    //private Integer pid;
-
-    @Column(name = "uid", nullable = false)
-    private Integer uid;
+    @ManyToOne
+    @JoinColumn(name = "uid", referencedColumnName = "uid", nullable = false)
+    private UserEntity user;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
@@ -27,18 +23,6 @@ public class CartItemEntity {
     private ProductEntity product;
 
 
-//    @ManyToOne
-//    @JoinColumn(name ="uid", referencedColumnName = "uid",nullable = false)
-//    private UserEntity userEntity;
-
-//    public UserEntity getUserEntity() {
-//        return userEntity;
-//    }
-//
-//    public void setUserEntity(UserEntity userEntity) {
-//        this.userEntity = userEntity;
-//    }
-
     public ProductEntity getProduct() {
         return product;
     }
@@ -47,8 +31,8 @@ public class CartItemEntity {
         this.product = product;
     }
 
-    public CartItemEntity(ProductEntity product,Integer quantity,Integer userEntityId){
-        this.uid = userEntityId;
+    public CartItemEntity(ProductEntity product,Integer quantity,UserEntity user){
+        this.user = user;
         this.quantity = quantity;
         this.product = product;
     }
@@ -65,13 +49,12 @@ public class CartItemEntity {
         this.cid = cid;
     }
 
-
-    public Integer getUid() {
-        return this.uid;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public Integer getQuantity() {
