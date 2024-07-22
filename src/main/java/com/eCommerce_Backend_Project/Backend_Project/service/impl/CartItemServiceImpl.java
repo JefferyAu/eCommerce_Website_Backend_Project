@@ -47,7 +47,8 @@ public class CartItemServiceImpl implements CartItemService {
 
         UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
 
-        List<CartItemEntity> cartItemEntityList = cartItemRepository.findAllByUser(loginUser);
+        //List<CartItemEntity> cartItemEntityList = cartItemRepository.findAllByUser(loginUser);
+        List<CartItemEntity> cartItemEntityList = findAllByUser(loginUser);
 
         List<CartItemResponseData> cartItemResponseDataList = new ArrayList<>();
 
@@ -77,6 +78,7 @@ public class CartItemServiceImpl implements CartItemService {
         }
     }
 
+    @Override
     public void deleteCartItem(FirebaseUserData firebaseUserData, Integer pid){
         try {
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
@@ -84,7 +86,7 @@ public class CartItemServiceImpl implements CartItemService {
             CartItemEntity cartItemEntity = findByProductAndUser(productEntity,loginUser);
             cartItemRepository.delete(cartItemEntity);
         }catch (Exception ex){
-            logger.warn("Delete Cart Item: " + ex.getMessage());
+            logger.warn("Delete Cart Item Failed: " + ex.getMessage());
             throw ex;
         }
 
@@ -117,7 +119,7 @@ public class CartItemServiceImpl implements CartItemService {
                 validateQuantity(cartItemEntity.getQuantity(),productEntity.getStock());
             }
         }catch (Exception ex){
-            logger.warn("Add Cart Item: " + ex.getMessage());
+            logger.warn("Add Cart Item Failed: " + ex.getMessage());
             throw ex;
         }
     }
@@ -132,8 +134,16 @@ public class CartItemServiceImpl implements CartItemService {
         Optional<CartItemEntity> cartItemEntityOptional = cartItemRepository.findByProductAndUser(productEntity,loginUser);
 
         if(cartItemEntityOptional.isEmpty()){
-            throw new CartItemException("Product is not exist in Cart");
+            //throw new CartItemException("Product is not exist in Cart");
+            throw new CartItemException(String.format("Product is not exist in Cart: pid-%d, uid-%d", productEntity.getPid(),loginUser.getUid()));
         }
         return cartItemEntityOptional.get();
     }
+
+    @Override
+    public List<CartItemEntity> findAllByUser(UserEntity loginUser){
+        List<CartItemEntity> cartItemEntityList = cartItemRepository.findAllByUser(loginUser);
+        return cartItemEntityList;
+    }
+
 }
