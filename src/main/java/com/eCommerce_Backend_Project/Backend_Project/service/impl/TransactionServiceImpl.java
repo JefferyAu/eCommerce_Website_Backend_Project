@@ -79,6 +79,19 @@ public class TransactionServiceImpl implements TransactionService {
 
     }
 
+    @Override
+    public void updateTransactionStatus(FirebaseUserData firebaseUserData,Integer tid){
+        try{
+            UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
+            TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
+            transactionEntity.setStatus("PROCESSING");
+            transactionRepository.save(transactionEntity);
+        }catch (Exception ex){
+            logger.warn("Update Transaction Status:" + ex.getMessage());
+            throw ex;
+        }
+    }
+
     public TransactionEntity findTransactionUser(UserEntity loginUser,Integer tid){
         Optional<TransactionEntity> transactionEntity = transactionRepository.findByUserAndTid(loginUser,tid);
 

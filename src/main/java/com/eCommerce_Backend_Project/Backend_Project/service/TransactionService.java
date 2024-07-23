@@ -7,4 +7,5 @@ import com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObje
 public interface TransactionService {
     TransactionResponseData createTransaction(FirebaseUserData firebaseUserData);
     TransactionResponseData getTransactionDetailById(FirebaseUserData firebaseUserData, Integer tid);
+    void updateTransactionStatus(FirebaseUserData firebaseUserData, Integer tid);
 }
