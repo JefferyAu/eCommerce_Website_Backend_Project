@@ -27,4 +27,13 @@ public class TransactionApi {
         TransactionResponseDto transactionResponseDto = new TransactionResponseDto(transactionResponseData);
         return transactionResponseDto;
     }
+
+    @GetMapping("/{tid}")
+    public TransactionResponseDto getTransactionDetailById(JwtAuthenticationToken jwt,
+                                         @PathVariable Integer tid){
+        FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
+        TransactionResponseData transactionResponseData = transactionService.getTransactionDetailById(firebaseUserData,tid);
+        TransactionResponseDto transactionResponseDto = new TransactionResponseDto(transactionResponseData);
+        return transactionResponseDto;
+    }
 }

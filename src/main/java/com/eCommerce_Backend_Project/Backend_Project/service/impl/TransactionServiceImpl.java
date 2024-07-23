@@ -6,32 +6,40 @@ import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartIt
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObject.TransactionResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.entity.TransactionEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.entity.TransactionProductEntity;
+import com.eCommerce_Backend_Project.Backend_Project.exception.TransactionException;
+import com.eCommerce_Backend_Project.Backend_Project.repository.TransactionProductRepository;
 import com.eCommerce_Backend_Project.Backend_Project.repository.TransactionRepository;
 import com.eCommerce_Backend_Project.Backend_Project.service.CartItemService;
 import com.eCommerce_Backend_Project.Backend_Project.service.TransactionProductService;
 import com.eCommerce_Backend_Project.Backend_Project.service.TransactionService;
 import com.eCommerce_Backend_Project.Backend_Project.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class TransactionServiceImpl implements TransactionService {
-
+    Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
     private final UserService userService;
     private final CartItemService cartItemService;
     private final TransactionRepository transactionRepository;
     private final TransactionProductService transactionProductService;
-
+    private final TransactionProductRepository transactionProductRepository;
 
     public TransactionServiceImpl(UserService userService,
                                   CartItemService cartItemService,
                                   TransactionRepository transactionRepository,
-                                  TransactionProductService transactionProductService) {
+                                  TransactionProductService transactionProductService,
+                                  TransactionProductRepository transactionProductRepository) {
         this.userService = userService;
         this.cartItemService = cartItemService;
         this.transactionRepository = transactionRepository;
         this.transactionProductService = transactionProductService;
+        this.transactionProductRepository = transactionProductRepository;
     }
 
     @Override
@@ -46,18 +54,37 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.save(transactionEntity);
 
         List<TransactionProductEntity> transactionProductEntityList = transactionProductService.addCartItemtoTransactionProduct(firebaseUserData,transactionEntity);
-//        for (TransactionProductEntity transactionProductEntity: transactionProductEntityList){
-//            System.out.println("Transaction Product Entity:");
-//            System.out.println("Tid: " + transactionProductEntity.getTid());
-//            System.out.println("Product ID: " + transactionProductEntity.getPid());
-//            System.out.println("name: " + transactionProductEntity.getName());
-//            System.out.println("Description: " + transactionProductEntity.getDescription());
-//            System.out.println("Price: " + transactionProductEntity.getPrice());
-//            System.out.println("Stock: " + transactionProductEntity.getStock());
-//            System.out.println("Quantity: " + transactionProductEntity.getQuantity());
-//        }
 
         TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity,transactionProductEntityList);
         return transactionResponseData;
+    }
+
+    @Override
+    public TransactionResponseData getTransactionDetailById(FirebaseUserData firebaseUserData, Integer tid){
+
+        try{
+            UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
+            TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
+            Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
+
+            List<TransactionProductEntity> transactionProductEntityList = transactionProductRepository.findAllByTid(transactionTid.get());
+
+            TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity,transactionProductEntityList);
+            return transactionResponseData;
+
+        }catch (Exception ex){
+            logger.warn("Get Transaction Detail failed: " + ex.getMessage());
+            throw ex;
+        }
+
+    }
+
+    public TransactionEntity findTransactionUser(UserEntity loginUser,Integer tid){
+        Optional<TransactionEntity> transactionEntity = transactionRepository.findByUserAndTid(loginUser,tid);
+
+        if(transactionEntity.isEmpty()){
+            throw new TransactionException("No this transaction");
+        }
+        return transactionEntity.get();
     }
 }
