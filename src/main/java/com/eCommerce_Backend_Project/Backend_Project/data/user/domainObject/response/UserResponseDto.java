@@ -1,4 +1,4 @@
-package com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.response;
+package com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.response;
 
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 

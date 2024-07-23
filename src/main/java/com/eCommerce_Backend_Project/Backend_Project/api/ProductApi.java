@@ -1,4 +1,4 @@
-package com.eCommerce_Backend_Project.Backend_Project.Api;
+package com.eCommerce_Backend_Project.Backend_Project.api;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.AllProductResponseDto;

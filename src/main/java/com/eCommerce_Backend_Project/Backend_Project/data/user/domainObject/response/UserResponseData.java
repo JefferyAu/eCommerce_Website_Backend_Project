@@ -1,6 +1,6 @@
-package com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.response;
+package com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.response;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.entity.UserEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 
 public class UserResponseData {
     private Integer uid;

@@ -1,7 +1,8 @@
 package com.eCommerce_Backend_Project.Backend_Project.service.impl;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.request.FirebaseUserData;
-import com.eCommerce_Backend_Project.Backend_Project.data.User.entity.UserEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObject.TransactionResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.entity.TransactionEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.entity.TransactionProductEntity;
@@ -37,12 +38,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public TransactionResponseData createTransaction(FirebaseUserData firebaseUserData){
         UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
-
-        TransactionEntity transactionEntity = new TransactionEntity(loginUser);
+        List<CartItemEntity> cartItemEntityList = cartItemService.findAllByUser(loginUser);
+        TransactionEntity transactionEntity = new TransactionEntity(loginUser,cartItemEntityList);
 
         transactionEntity.setUser(loginUser);
 
         transactionRepository.save(transactionEntity);
+
         List<TransactionProductEntity> transactionProductEntityList = transactionProductService.addCartItemtoTransactionProduct(firebaseUserData,transactionEntity);
 //        for (TransactionProductEntity transactionProductEntity: transactionProductEntityList){
 //            System.out.println("Transaction Product Entity:");

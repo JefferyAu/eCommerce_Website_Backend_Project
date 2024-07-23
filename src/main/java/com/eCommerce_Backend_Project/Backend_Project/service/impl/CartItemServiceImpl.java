@@ -1,7 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.service.impl;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.request.FirebaseUserData;
-import com.eCommerce_Backend_Project.Backend_Project.data.User.entity.UserEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.domainObject.CartItemResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;

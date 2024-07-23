@@ -1,6 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.product.dto;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
+import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.domainObject.TransactionProductResponseData;
 
 import java.math.BigDecimal;
 
@@ -13,6 +14,15 @@ public class ProductResponseDto {
     private Integer stock;
 
     public ProductResponseDto(ProductResponseData data){
+        this.pid = data.getPid();
+        this.name = data.getName();
+        this.description = data.getDescription();
+        this.imageUrl = data.getImageUrl();
+        this.price = data.getPrice();
+        this.stock = data.getStock();
+    }
+
+    public ProductResponseDto(TransactionProductResponseData data){
         this.pid = data.getPid();
         this.name = data.getName();
         this.description = data.getDescription();

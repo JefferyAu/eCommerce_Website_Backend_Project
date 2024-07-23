@@ -1,6 +1,6 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.entity.UserEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
 import jakarta.persistence.*;
 

@@ -1,6 +1,6 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.cartItem.domainObject;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.domainObject.response.UserResponseData;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.response.UserResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
 

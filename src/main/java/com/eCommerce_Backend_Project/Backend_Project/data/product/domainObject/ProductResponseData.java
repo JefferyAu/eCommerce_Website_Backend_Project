@@ -1,6 +1,8 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.domainObject.TransactionProductResponseData;
+import org.springframework.security.access.method.P;
 
 import java.math.BigDecimal;
 
@@ -20,6 +22,7 @@ public class ProductResponseData {
         this.price = entity.getPrice();
         this.stock = entity.getStock();
     }
+
 
     public Integer getPid() {
         return pid;

@@ -1,13 +1,12 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.transaction.entity;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.entity.UserEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,18 +26,18 @@ public class TransactionEntity {
     @Column(name = "status" , nullable = false)
     private String status;
 
-    @Column(name = "total")
-    private BigDecimal total;
+    @Column(name = "total", nullable = false)
+    private BigDecimal total = BigDecimal.valueOf(0);
 
     public TransactionEntity(){
 
     }
 
-    public TransactionEntity(UserEntity user){
+    public TransactionEntity(UserEntity user, List<CartItemEntity> cartItemEntityList){
         this.user = user;
         this.datetime = Timestamp.valueOf(LocalDateTime.now());
         setStatus("PREPARE");
-        this.total = null;
+        setTotal(cartItemEntityList);
     }
 
     public Integer getTid() {
@@ -77,7 +76,10 @@ public class TransactionEntity {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
+    public void setTotal(List<CartItemEntity> cartItemEntityList) {
+        //this.total = total;
+        for(CartItemEntity cartItemEntity: cartItemEntityList){
+            this.total = total.add(BigDecimal.valueOf(cartItemEntity.getQuantity()).multiply(cartItemEntity.getProduct().getPrice()));
+        }
     }
 }

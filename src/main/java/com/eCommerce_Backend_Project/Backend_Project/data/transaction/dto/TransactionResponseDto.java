@@ -1,6 +1,5 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.transaction.dto;
 
-import com.eCommerce_Backend_Project.Backend_Project.data.User.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObject.TransactionResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.domainObject.TransactionProductResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.dto.TransactionProductResponseDto;
@@ -12,14 +11,14 @@ import java.util.List;
 
 public class TransactionResponseDto {
     private Integer tid;
-    private Integer user;
+    private Integer buyerUid;
     private Timestamp datetime;
     private String status;
     private BigDecimal total;
     private List<TransactionProductResponseDto> items = new ArrayList<>();
 
     public TransactionResponseDto(TransactionResponseData data){
-        this.user = data.getUser();
+        this.buyerUid = data.getUser();
         this.tid = data.getTid();
         this.datetime = data.getDatetime();
         this.status = data.getStatus();
@@ -30,12 +29,12 @@ public class TransactionResponseDto {
         }
     }
 
-    public Integer getUser() {
-        return user;
+    public Integer getBuyerUid() {
+        return buyerUid;
     }
 
-    public void setUser(Integer user) {
-        this.user = user;
+    public void setBuyerUid(Integer buyerUid) {
+        this.buyerUid = buyerUid;
     }
 
     public Integer getTid() {
