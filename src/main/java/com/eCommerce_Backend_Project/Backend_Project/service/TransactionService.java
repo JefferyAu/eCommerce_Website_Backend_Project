@@ -8,4 +8,5 @@ public interface TransactionService {
     TransactionResponseData createTransaction(FirebaseUserData firebaseUserData);
     TransactionResponseData getTransactionDetailById(FirebaseUserData firebaseUserData, Integer tid);
     void updateTransactionStatus(FirebaseUserData firebaseUserData, Integer tid);
+    TransactionResponseData finishTransaction(FirebaseUserData firebaseUserData, Integer tid);
 }

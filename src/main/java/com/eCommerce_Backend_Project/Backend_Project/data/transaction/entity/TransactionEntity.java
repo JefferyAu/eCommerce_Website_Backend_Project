@@ -6,7 +6,6 @@ import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartIt
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 

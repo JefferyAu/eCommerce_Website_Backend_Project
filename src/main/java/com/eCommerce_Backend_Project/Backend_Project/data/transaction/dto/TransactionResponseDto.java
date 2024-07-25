@@ -31,7 +31,7 @@ public class TransactionResponseDto {
         this.buyerUid = data.getUser().getUid();
         this.tid = data.getTid();
         this.datetime = data.getDatetime();
-        this.status = TransactionStatus.PREPARE;
+        this.status = data.getStatus();
         this.total = data.getTotal();
         for(TransactionProductResponseData transactionProductResponseData: data.getTransactionProductResponseDatalist()){
             TransactionProductResponseDto transactionProductResponseDto = new TransactionProductResponseDto(transactionProductResponseData);

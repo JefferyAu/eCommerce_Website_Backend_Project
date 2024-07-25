@@ -25,7 +25,7 @@ public class TransactionResponseData {
         this.tid = entity.getTid();
         this.user = new UserResponseData(entity.getUser());
         this.datetime = entity.getDatetime();
-        this.status = TransactionStatus.PREPARE;
+        this.status = entity.getStatus();
         this.total = entity.getTotal();
         for(TransactionProductEntity transactionProductEntity: transactionProductEntityList){
             TransactionProductResponseData transactionProductResponseData = new TransactionProductResponseData(transactionProductEntity);

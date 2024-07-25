@@ -45,4 +45,12 @@ public class TransactionApi {
         transactionService.updateTransactionStatus(firebaseUserData,tid);
         return new SuccessCatItemResponseDto();
     }
+
+    @PatchMapping("/{tid}/finish")
+    public TransactionResponseDto finishTransaction(JwtAuthenticationToken jwt, @PathVariable @Positive Integer tid){
+        FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
+        TransactionResponseData transactionResponseData = transactionService.finishTransaction(firebaseUserData,tid);
+        TransactionResponseDto transactionResponseDto = new TransactionResponseDto(transactionResponseData);
+        return transactionResponseDto;
+    }
 }

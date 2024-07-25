@@ -105,7 +105,28 @@ public class TransactionServiceImpl implements TransactionService {
                 productEntity.setStock(transactionProductEntity.getStock() - transactionProductEntity.getQuantity());
             }
         }catch (Exception ex){
-            logger.warn("Update Transaction Status:" + ex.getMessage());
+            logger.warn("Update Transaction Status: " + ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
+    public TransactionResponseData finishTransaction(FirebaseUserData firebaseUserData, Integer tid){
+        try{
+            UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
+            TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
+            transactionEntity.setStatus(TransactionStatus.SUCCESS);
+            transactionRepository.save(transactionEntity);
+
+            Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
+            List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
+            for (TransactionProductEntity transactionProductEntity : transactionProductEntityList){
+                  cartItemService.deleteCartItem(firebaseUserData,transactionProductEntity.getPid());
+            }
+            TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity,transactionProductEntityList);
+            return transactionResponseData;
+        }catch (Exception ex){
+            logger.warn("Finish Transaction: " + ex.getMessage());
             throw ex;
         }
     }
