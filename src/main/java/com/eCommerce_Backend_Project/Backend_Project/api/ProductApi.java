@@ -1,19 +1,20 @@
 package com.eCommerce_Backend_Project.Backend_Project.api;
 
+import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductRequestData;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.AllProductResponseDto;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.ProductRequestDto;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.ProductResponseDto;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
 import com.eCommerce_Backend_Project.Backend_Project.service.ProductService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.eCommerce_Backend_Project.Backend_Project.util.JwtUtil;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/public/product")
 public class ProductApi {
 
     private final ProductService productService;
@@ -22,7 +23,7 @@ public class ProductApi {
         this.productService = productService;
     }
 
-    @GetMapping
+    @GetMapping("/public/product")
     public List<AllProductResponseDto>  getAllProduct(){
         List<ProductResponseData> productResponseDataList = productService.getAllProduct();
 
@@ -34,10 +35,19 @@ public class ProductApi {
         return allProductResponseDtoList;
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/public/product/{id}")
     public ProductResponseDto getProductbyid(@PathVariable Integer id){
         ProductResponseData productResponseData = productService.getProductbyid(id);
         ProductResponseDto productResponseDto = new ProductResponseDto(productResponseData);
         return productResponseDto;
+    }
+
+    @PostMapping("/product/add")
+    public ProductResponseDto addProduct(JwtAuthenticationToken jwt, @RequestBody ProductRequestDto dto){
+        FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
+        ProductRequestData productRequestData = new ProductRequestData(dto);
+        ProductResponseData productResponseData = productService.addProduct(firebaseUserData,productRequestData);
+        ProductResponseDto productResponseDto = new ProductResponseDto(productResponseData);
+        return productResponseDto ;
     }
 }

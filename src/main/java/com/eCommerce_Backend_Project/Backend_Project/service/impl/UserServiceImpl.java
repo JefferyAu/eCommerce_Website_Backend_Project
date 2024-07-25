@@ -27,4 +27,14 @@ public class UserServiceImpl implements UserService {
         }
 
     }
+
+    @Override
+    public boolean getExistUserByFirebaseUserData(FirebaseUserData firebaseUserData){
+        Optional<UserEntity> existUser = userRespository.findByFirebaseUid(firebaseUserData.getFirebaseUid());
+        if(existUser.isEmpty()){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

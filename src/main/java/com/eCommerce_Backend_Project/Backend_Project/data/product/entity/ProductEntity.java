@@ -1,6 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.product.entity;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductRequestData;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -29,19 +30,17 @@ public class ProductEntity {
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
-//    @OneToMany(mappedBy = "product")
-//    private List<CartItemEntity> cartItemProductList;
-
-//    public List<CartItemEntity> getCartItemProductList() {
-//        return cartItemProductList;
-//    }
-//
-//    public void setCartItemProductList(List<CartItemEntity> cartItemProductList) {
-//        this.cartItemProductList = cartItemProductList;
-//    }
 
     public ProductEntity(){
 
+    }
+
+    public ProductEntity(ProductRequestData data){
+        this.name = data.getName();
+        this.description = data.getDescription();
+        this.imageUrl = data.getImageUrl();
+        this.price = data.getPrice();
+        this.stock = data.getStock();
     }
 
     public Integer getPid() {
