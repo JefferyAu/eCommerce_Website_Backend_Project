@@ -44,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
        }
     }
 
+    @Override
     public ProductEntity findBypid(Integer id){
         Optional<ProductEntity> productEntitylsit = productRepository.findBypid(id);
         try{

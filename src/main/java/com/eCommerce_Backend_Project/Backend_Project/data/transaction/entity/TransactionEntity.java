@@ -1,5 +1,6 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.transaction.entity;
 
+import com.eCommerce_Backend_Project.Backend_Project.data.transaction.status.TransactionStatus;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
 import jakarta.persistence.*;
@@ -21,10 +22,11 @@ public class TransactionEntity {
     private UserEntity user;
 
     @Column(name = "datetime", nullable = false)
-    private Timestamp datetime;
+    private LocalDateTime datetime;
 
-    @Column(name = "status" , nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TransactionStatus status;
 
     @Column(name = "total", nullable = false)
     private BigDecimal total = BigDecimal.valueOf(0);
@@ -35,8 +37,8 @@ public class TransactionEntity {
 
     public TransactionEntity(UserEntity user, List<CartItemEntity> cartItemEntityList){
         this.user = user;
-        this.datetime = Timestamp.valueOf(LocalDateTime.now());
-        setStatus("PREPARE");
+        this.datetime = LocalDateTime.now();
+        setStatus(TransactionStatus.PREPARE);
         setTotal(cartItemEntityList);
     }
 
@@ -56,19 +58,19 @@ public class TransactionEntity {
         this.user = user;
     }
 
-    public Timestamp getDatetime() {
+    public LocalDateTime getDatetime() {
         return datetime;
     }
 
-    public void setDatetime(Timestamp datetime) {
+    public void setDatetime(LocalDateTime datetime) {
         this.datetime = datetime;
     }
 
-    public String getStatus() {
+    public TransactionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TransactionStatus status) {
         this.status = status;
     }
 

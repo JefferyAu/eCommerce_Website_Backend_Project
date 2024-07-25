@@ -50,4 +50,10 @@ public class TransactionProductServiceImpl implements TransactionProductService 
       return transactionProductEntityList;
     }
 
+    @Override
+    public List<TransactionProductEntity> findTransactionProductList(TransactionEntity tid){
+        List<TransactionProductEntity> transactionProductEntityList = transactionProductRepository.findAllByTid(tid);
+        return transactionProductEntityList;
+    }
+
 }

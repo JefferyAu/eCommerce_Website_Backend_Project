@@ -1,27 +1,37 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.transaction.dto;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObject.TransactionResponseData;
+import com.eCommerce_Backend_Project.Backend_Project.data.transaction.status.TransactionStatus;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.domainObject.TransactionProductResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.dto.TransactionProductResponseDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonPropertyOrder({"tid","buyerUid","datetime","status","total","items"})
 public class TransactionResponseDto {
     private Integer tid;
+
+    @JsonProperty("buyer_uid")
     private Integer buyerUid;
-    private Timestamp datetime;
-    private String status;
+
+    @JsonFormat(pattern = "yyyyMMdd'T'HH:mm:ss")
+    private LocalDateTime datetime;
+
+    private TransactionStatus status;
     private BigDecimal total;
     private List<TransactionProductResponseDto> items = new ArrayList<>();
 
     public TransactionResponseDto(TransactionResponseData data){
-        this.buyerUid = data.getUser();
+        this.buyerUid = data.getUser().getUid();
         this.tid = data.getTid();
         this.datetime = data.getDatetime();
-        this.status = data.getStatus();
+        this.status = TransactionStatus.PREPARE;
         this.total = data.getTotal();
         for(TransactionProductResponseData transactionProductResponseData: data.getTransactionProductResponseDatalist()){
             TransactionProductResponseDto transactionProductResponseDto = new TransactionProductResponseDto(transactionProductResponseData);
@@ -45,19 +55,19 @@ public class TransactionResponseDto {
         this.tid = tid;
     }
 
-    public Timestamp getDatetime() {
+    public LocalDateTime getDatetime() {
         return datetime;
     }
 
-    public void setDatetime(Timestamp datetime) {
+    public void setDatetime(LocalDateTime datetime) {
         this.datetime = datetime;
     }
 
-    public String getStatus() {
+    public TransactionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TransactionStatus status) {
         this.status = status;
     }
 

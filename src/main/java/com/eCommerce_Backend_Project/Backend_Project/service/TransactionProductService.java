@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface TransactionProductService {
     List<TransactionProductEntity> addCartItemtoTransactionProduct(FirebaseUserData firebaseUserData, TransactionEntity tid);
+    List<TransactionProductEntity> findTransactionProductList(TransactionEntity tid);
 }

@@ -2,28 +2,30 @@ package com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObj
 
 
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.entity.TransactionEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.transaction.status.TransactionStatus;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.domainObject.TransactionProductResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.entity.TransactionProductEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.response.UserResponseData;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionResponseData {
     private Integer tid;
-    private Integer user;
-    private Timestamp datetime;
-    private String status;
+    private UserResponseData user;
+    private LocalDateTime datetime;
+    private TransactionStatus status;
     private BigDecimal total;
 
     private List<TransactionProductResponseData> transactionProductResponseDatalist = new ArrayList<>() ;
 
     public TransactionResponseData(TransactionEntity entity, List<TransactionProductEntity> transactionProductEntityList){
         this.tid = entity.getTid();
-        this.user = entity.getUser().getUid();
+        this.user = new UserResponseData(entity.getUser());
         this.datetime = entity.getDatetime();
-        this.status = entity.getStatus();
+        this.status = TransactionStatus.PREPARE;
         this.total = entity.getTotal();
         for(TransactionProductEntity transactionProductEntity: transactionProductEntityList){
             TransactionProductResponseData transactionProductResponseData = new TransactionProductResponseData(transactionProductEntity);
@@ -39,27 +41,34 @@ public class TransactionResponseData {
         this.tid = tid;
     }
 
-    public Integer getUser() {
+    public UserResponseData getUser() {
         return user;
     }
 
-    public void setUser(Integer user) {
+    public void setUser(UserResponseData user) {
         this.user = user;
     }
+//    public Integer getUser() {
+//        return user;
+//    }
+//
+//    public void setUser(Integer user) {
+//        this.user = user;
+//    }
 
-    public Timestamp getDatetime() {
+    public LocalDateTime getDatetime() {
         return datetime;
     }
 
-    public void setDatetime(Timestamp datetime) {
+    public void setDatetime(LocalDateTime datetime) {
         this.datetime = datetime;
     }
 
-    public String getStatus() {
+    public TransactionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TransactionStatus status) {
         this.status = status;
     }
 

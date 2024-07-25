@@ -1,14 +1,12 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.domainObject;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
-import com.eCommerce_Backend_Project.Backend_Project.data.transaction.entity.TransactionEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.entity.TransactionProductEntity;
 
 import java.math.BigDecimal;
 
 public class TransactionProductResponseData {
     private Integer tpid;
-//    private TransactionEntity tid;
     private Integer pid;
     private String name;
     private String description;
@@ -20,7 +18,6 @@ public class TransactionProductResponseData {
 
     public TransactionProductResponseData(TransactionProductEntity entity){
         this.tpid = entity.getTpid();
-        //this.tid = entity.getTid();
         this.pid = entity.getPid();
         this.name = entity.getName();
         this.description = entity.getDescription();
@@ -37,14 +34,6 @@ public class TransactionProductResponseData {
     public void setTpid(Integer tpid) {
         this.tpid = tpid;
     }
-
-//    public TransactionEntity getTid() {
-//        return tid;
-//    }
-//
-//    public void setTid(TransactionEntity tid) {
-//        this.tid = tid;
-//    }
 
     public Integer getPid() {
         return pid;

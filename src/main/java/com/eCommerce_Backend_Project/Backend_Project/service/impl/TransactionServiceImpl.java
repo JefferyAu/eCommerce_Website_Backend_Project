@@ -1,5 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.service.impl;
 
+import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.transaction.status.TransactionStatus;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.entity.CartItemEntity;
@@ -9,10 +11,7 @@ import com.eCommerce_Backend_Project.Backend_Project.data.transactionProduct.ent
 import com.eCommerce_Backend_Project.Backend_Project.exception.TransactionException;
 import com.eCommerce_Backend_Project.Backend_Project.repository.TransactionProductRepository;
 import com.eCommerce_Backend_Project.Backend_Project.repository.TransactionRepository;
-import com.eCommerce_Backend_Project.Backend_Project.service.CartItemService;
-import com.eCommerce_Backend_Project.Backend_Project.service.TransactionProductService;
-import com.eCommerce_Backend_Project.Backend_Project.service.TransactionService;
-import com.eCommerce_Backend_Project.Backend_Project.service.UserService;
+import com.eCommerce_Backend_Project.Backend_Project.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -29,34 +28,47 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionProductService transactionProductService;
     private final TransactionProductRepository transactionProductRepository;
+    private final ProductService productService;
 
     public TransactionServiceImpl(UserService userService,
                                   CartItemService cartItemService,
                                   TransactionRepository transactionRepository,
                                   TransactionProductService transactionProductService,
-                                  TransactionProductRepository transactionProductRepository) {
+                                  TransactionProductRepository transactionProductRepository,
+                                  ProductService productService) {
         this.userService = userService;
         this.cartItemService = cartItemService;
         this.transactionRepository = transactionRepository;
         this.transactionProductService = transactionProductService;
         this.transactionProductRepository = transactionProductRepository;
+        this.productService = productService;
     }
 
     @Override
     @Transactional
     public TransactionResponseData createTransaction(FirebaseUserData firebaseUserData){
-        UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
-        List<CartItemEntity> cartItemEntityList = cartItemService.findAllByUser(loginUser);
-        TransactionEntity transactionEntity = new TransactionEntity(loginUser,cartItemEntityList);
+        try{
+            UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
+            List<CartItemEntity> cartItemEntityList = cartItemService.findAllByUser(loginUser);
 
-        transactionEntity.setUser(loginUser);
+            if(cartItemEntityList.isEmpty()){
+                throw new TransactionException("Cart Item is empty");
+            }
 
-        transactionRepository.save(transactionEntity);
+            TransactionEntity transactionEntity = new TransactionEntity(loginUser,cartItemEntityList);
 
-        List<TransactionProductEntity> transactionProductEntityList = transactionProductService.addCartItemtoTransactionProduct(firebaseUserData,transactionEntity);
+            transactionEntity.setUser(loginUser);
 
-        TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity,transactionProductEntityList);
-        return transactionResponseData;
+            transactionRepository.save(transactionEntity);
+
+            List<TransactionProductEntity> transactionProductEntityList = transactionProductService.addCartItemtoTransactionProduct(firebaseUserData,transactionEntity);
+
+            TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity,transactionProductEntityList);
+            return transactionResponseData;
+        }catch (Exception ex){
+            logger.warn("create transaction failed" + ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override
@@ -66,8 +78,7 @@ public class TransactionServiceImpl implements TransactionService {
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
             TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
             Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
-
-            List<TransactionProductEntity> transactionProductEntityList = transactionProductRepository.findAllByTid(transactionTid.get());
+            List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
 
             TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity,transactionProductEntityList);
             return transactionResponseData;
@@ -80,22 +91,29 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional
     public void updateTransactionStatus(FirebaseUserData firebaseUserData,Integer tid){
         try{
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
             TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
-            transactionEntity.setStatus("PROCESSING");
+            transactionEntity.setStatus(TransactionStatus.PROCESSING);
             transactionRepository.save(transactionEntity);
+            Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
+            List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
+            for (TransactionProductEntity transactionProductEntity : transactionProductEntityList){
+                ProductEntity productEntity = productService.findBypid(transactionProductEntity.getPid());
+                productEntity.setStock(transactionProductEntity.getStock() - transactionProductEntity.getQuantity());
+            }
         }catch (Exception ex){
             logger.warn("Update Transaction Status:" + ex.getMessage());
             throw ex;
         }
     }
 
-    public TransactionEntity findTransactionUser(UserEntity loginUser,Integer tid){
-        Optional<TransactionEntity> transactionEntity = transactionRepository.findByUserAndTid(loginUser,tid);
+    public TransactionEntity findTransactionUser(UserEntity loginUser, Integer tid) {
+        Optional<TransactionEntity> transactionEntity = transactionRepository.findByUserAndTid(loginUser, tid);
 
-        if(transactionEntity.isEmpty()){
+        if (transactionEntity.isEmpty()) {
             throw new TransactionException("No this transaction");
         }
         return transactionEntity.get();
