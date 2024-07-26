@@ -105,7 +105,7 @@ public class TransactionServiceImpl implements TransactionService {
             List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
             for (TransactionProductEntity transactionProductEntity : transactionProductEntityList){
                 ProductEntity productEntity = productService.findBypid(transactionProductEntity.getPid());
-                if(!productService.isNotValidQuantity(transactionProductEntity.getPid(),transactionProductEntity.getQuantity())){
+                if(!productService.isValidQuantity(transactionProductEntity.getPid(),transactionProductEntity.getQuantity())){
                     throw new TransactionException(String.format("Not enough stock: Pid%d Stock: %d",transactionProductEntity.getPid(),productEntity.getStock()));
                 }
                 productEntity.setStock(transactionProductEntity.getStock() - transactionProductEntity.getQuantity());

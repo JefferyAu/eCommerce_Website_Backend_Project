@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/public/product")
 public class ProductApi {
 
     private final ProductService productService;
@@ -23,7 +24,7 @@ public class ProductApi {
         this.productService = productService;
     }
 
-    @GetMapping("/public/product")
+    @GetMapping
     public List<AllProductResponseDto>  getAllProduct(){
         List<ProductResponseData> productResponseDataList = productService.getAllProduct();
 
@@ -35,19 +36,11 @@ public class ProductApi {
         return allProductResponseDtoList;
     }
 
-    @GetMapping("/public/product/{id}")
+    @GetMapping("{id}")
     public ProductResponseDto getProductbyid(@PathVariable Integer id){
         ProductResponseData productResponseData = productService.getProductbyid(id);
         ProductResponseDto productResponseDto = new ProductResponseDto(productResponseData);
         return productResponseDto;
     }
 
-    @PostMapping("/product/add")
-    public ProductResponseDto addProduct(JwtAuthenticationToken jwt, @RequestBody ProductRequestDto dto){
-        FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
-        ProductRequestData productRequestData = new ProductRequestData(dto);
-        ProductResponseData productResponseData = productService.addProduct(firebaseUserData,productRequestData);
-        ProductResponseDto productResponseDto = new ProductResponseDto(productResponseData);
-        return productResponseDto ;
-    }
 }

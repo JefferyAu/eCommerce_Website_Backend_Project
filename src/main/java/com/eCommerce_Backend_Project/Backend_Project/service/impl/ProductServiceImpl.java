@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseData addProduct(FirebaseUserData firebaseUserData,ProductRequestData data){
         try{
 
-        if(!firebaseUserData.getFirebaseUid().equals("eVBvl8vc8jgFseJANOaZv04OnaX2")){
+        if (!adminPermission(firebaseUserData.getFirebaseUid())){
             throw new UserException("You don't have permission to add product");
         }
 
@@ -85,13 +85,33 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponseData removeProduct(FirebaseUserData firebaseUserData,Integer pid){
+        try {
+
+            if (!adminPermission(firebaseUserData.getFirebaseUid())){
+                throw new UserException("You don't have permission to remove product");
+            }
+
+            ProductEntity productEntity = findBypid(pid);
+            productRepository.delete(productEntity);
+
+            ProductResponseData productResponseData = new ProductResponseData(productEntity);
+            return productResponseData;
+
+        }catch (Exception ex){
+            logger.warn("Remove Product: " + ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
     public ProductEntity findBypid(Integer id){
-        Optional<ProductEntity> productEntitylsit = productRepository.findBypid(id);
+        Optional<ProductEntity> productEntity = productRepository.findBypid(id);
         try{
-            if(productEntitylsit.isEmpty()){
+            if(productEntity.isEmpty()){
                 throw new ProductNotFoundException(id);
             }
-            return productEntitylsit.get();
+            return productEntity.get();
         }catch (Exception ex){
             logger.warn(ex.getMessage());
             throw  ex;
@@ -107,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean isNotValidQuantity(Integer pid, Integer quantity){
+    public boolean isValidQuantity(Integer pid, Integer quantity){
         ProductEntity productEntity = findBypid(pid);
         if(quantity < 1){
             return false;
@@ -115,5 +135,13 @@ public class ProductServiceImpl implements ProductService {
             return false;
         }
         return true;
+    }
+
+    public boolean adminPermission(String uid){
+        if (uid.equals("eVBvl8vc8jgFseJANOaZv04OnaX2")){
+            return true;
+        }else {
+           return false;
+        }
     }
 }

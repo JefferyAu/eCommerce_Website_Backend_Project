@@ -16,4 +16,5 @@ public interface CartItemService {
     List<CartItemResponseData> getUserCartByFirebaseUserData(FirebaseUserData firebaseUserData);
 
     List<CartItemEntity> findAllByUser(UserEntity loginUser);
+
 }
