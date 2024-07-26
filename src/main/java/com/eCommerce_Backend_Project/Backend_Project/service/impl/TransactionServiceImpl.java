@@ -96,12 +96,18 @@ public class TransactionServiceImpl implements TransactionService {
         try{
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
             TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
+            if(transactionEntity.getStatus() != TransactionStatus.PREPARE){
+                throw new TransactionException("Status error");
+            }
             transactionEntity.setStatus(TransactionStatus.PROCESSING);
             transactionRepository.save(transactionEntity);
             Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
             List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
             for (TransactionProductEntity transactionProductEntity : transactionProductEntityList){
                 ProductEntity productEntity = productService.findBypid(transactionProductEntity.getPid());
+                if(!productService.isNotValidQuantity(transactionProductEntity.getPid(),transactionProductEntity.getQuantity())){
+                    throw new TransactionException(String.format("Not enough stock: Pid%d Stock: %d",transactionProductEntity.getPid(),productEntity.getStock()));
+                }
                 productEntity.setStock(transactionProductEntity.getStock() - transactionProductEntity.getQuantity());
             }
         }catch (Exception ex){
@@ -115,6 +121,9 @@ public class TransactionServiceImpl implements TransactionService {
         try{
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
             TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
+            if(transactionEntity.getStatus() != TransactionStatus.PROCESSING){
+                throw new TransactionException("Status error");
+            }
             transactionEntity.setStatus(TransactionStatus.SUCCESS);
             transactionRepository.save(transactionEntity);
 
@@ -135,8 +144,9 @@ public class TransactionServiceImpl implements TransactionService {
         Optional<TransactionEntity> transactionEntity = transactionRepository.findByUserAndTid(loginUser, tid);
 
         if (transactionEntity.isEmpty()) {
-            throw new TransactionException("No this transaction");
+            throw new TransactionException(String.format("No this transaction,uid-%s,tid-%d",loginUser.getUid(),tid));
         }
         return transactionEntity.get();
     }
+
 }

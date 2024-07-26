@@ -1,8 +1,8 @@
 package com.eCommerce_Backend_Project.Backend_Project.api;
 
 
-import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.dto.SuccessCatItemResponseDto;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObject.TransactionResponseData;
+import com.eCommerce_Backend_Project.Backend_Project.data.transaction.dto.SuccessTransactionResponseDto;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.dto.TransactionResponseDto;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
@@ -40,10 +40,10 @@ public class TransactionApi {
     }
 
     @PatchMapping("/{tid}/pay")
-    public SuccessCatItemResponseDto updateTransactionStatus(JwtAuthenticationToken jwt,@PathVariable @Positive Integer tid){
+    public SuccessTransactionResponseDto updateTransactionStatus(JwtAuthenticationToken jwt,@PathVariable @Positive Integer tid){
         FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
         transactionService.updateTransactionStatus(firebaseUserData,tid);
-        return new SuccessCatItemResponseDto();
+        return new SuccessTransactionResponseDto();
     }
 
     @PatchMapping("/{tid}/finish")

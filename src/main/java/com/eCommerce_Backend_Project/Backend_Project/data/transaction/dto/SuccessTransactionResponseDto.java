@@ -1,17 +1,19 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.transaction.dto;
 
+import com.eCommerce_Backend_Project.Backend_Project.data.transaction.status.TransactionStatus;
+
 public class SuccessTransactionResponseDto {
-    private String result;
+    private TransactionStatus result;
 
     public SuccessTransactionResponseDto(){
-        setResult("SUCCSS");
+        setResult(TransactionStatus.SUCCESS);
     }
 
-    public String getResult() {
+    public TransactionStatus getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public void setResult(TransactionStatus result) {
         this.result = result;
     }
 }

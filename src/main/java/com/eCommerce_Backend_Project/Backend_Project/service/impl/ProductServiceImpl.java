@@ -105,4 +105,15 @@ public class ProductServiceImpl implements ProductService {
         }
         return false;
     }
+
+    @Override
+    public boolean isNotValidQuantity(Integer pid, Integer quantity){
+        ProductEntity productEntity = findBypid(pid);
+        if(quantity < 1){
+            return false;
+        }else if(quantity > productEntity.getStock()){
+            return false;
+        }
+        return true;
+    }
 }
