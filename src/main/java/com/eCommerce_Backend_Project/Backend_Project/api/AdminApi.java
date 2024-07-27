@@ -38,4 +38,15 @@ public class AdminApi {
          ProductResponseDto productResponseDto = new ProductResponseDto(productResponseData);
          return productResponseDto;
     }
+
+    @PutMapping("{pid}")
+    public ProductResponseDto updateProduct(JwtAuthenticationToken jwt,
+                              @PathVariable @Positive Integer pid,
+                              @RequestBody ProductRequestDto dto){
+    FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
+    ProductRequestData productRequestData = new ProductRequestData(dto);
+    ProductResponseData productResponseData = productService.updateProduct(firebaseUserData, pid,productRequestData);
+    ProductResponseDto productResponseDto = new ProductResponseDto(productResponseData);
+    return productResponseDto;
+    }
 }

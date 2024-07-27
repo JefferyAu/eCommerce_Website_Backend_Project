@@ -2,7 +2,6 @@ package com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject;
 
 
 import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.ProductRequestDto;
-import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.ProductResponseDto;
 
 import java.math.BigDecimal;
 

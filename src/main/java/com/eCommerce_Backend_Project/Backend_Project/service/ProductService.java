@@ -11,9 +11,8 @@ public interface ProductService {
     List<ProductResponseData> getAllProduct();
     ProductResponseData getProductbyid(Integer id);
     ProductResponseData addProduct(FirebaseUserData firebaseUserData, ProductRequestData data);
-
     ProductResponseData removeProduct(FirebaseUserData firebaseUserData, Integer pid);
-
+    ProductResponseData updateProduct(FirebaseUserData firebaseUserData, Integer pid, ProductRequestData data);
     ProductEntity findBypid(Integer id);
     boolean isValidQuantity(Integer pid, Integer quantity);
 }

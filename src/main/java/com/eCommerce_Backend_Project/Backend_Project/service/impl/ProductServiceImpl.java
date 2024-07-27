@@ -105,6 +105,35 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductResponseData updateProduct(FirebaseUserData firebaseUserData, Integer pid, ProductRequestData data){
+        try{
+            ProductEntity productEntity = findBypid(pid);
+
+            if(!adminPermission(firebaseUserData.getFirebaseUid())){
+                throw new UserException("You don't have permission to update product");
+            }
+
+//            if(findByProductName(data.getName())){
+//                throw new ProductException("Product name is already exist");
+//            }
+
+            productEntity.setName(data.getName());
+            productEntity.setDescription(data.getDescription());
+            productEntity.setImageUrl(data.getImageUrl());
+            productEntity.setPrice(data.getPrice());
+            productEntity.setStock(data.getStock());
+            productRepository.save(productEntity);
+
+            ProductResponseData productResponseData = new ProductResponseData(productEntity);
+            return productResponseData;
+
+        }catch (Exception ex){
+            logger.warn("Update Product: " + ex.getMessage());
+            throw ex;
+        }
+    }
+
+    @Override
     public ProductEntity findBypid(Integer id){
         Optional<ProductEntity> productEntity = productRepository.findBypid(id);
         try{
