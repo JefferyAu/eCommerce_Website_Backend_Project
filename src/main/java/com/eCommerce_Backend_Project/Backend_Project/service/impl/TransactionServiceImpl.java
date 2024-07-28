@@ -96,20 +96,28 @@ public class TransactionServiceImpl implements TransactionService {
         try{
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
             TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
+
             if(transactionEntity.getStatus() != TransactionStatus.PREPARE){
                 throw new TransactionException("Status error");
             }
-            transactionEntity.setStatus(TransactionStatus.PROCESSING);
-            transactionRepository.save(transactionEntity);
+
+
             Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
             List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
+
             for (TransactionProductEntity transactionProductEntity : transactionProductEntityList){
                 ProductEntity productEntity = productService.findBypid(transactionProductEntity.getPid());
                 if(!productService.isValidQuantity(transactionProductEntity.getPid(),transactionProductEntity.getQuantity())){
-                    throw new TransactionException(String.format("Not enough stock: Pid%d Stock: %d",transactionProductEntity.getPid(),productEntity.getStock()));
+                    throw new TransactionException(String.format("Not enough stock: Pid: %d Stock: %d",transactionProductEntity.getPid(),productEntity.getStock()));
                 }
-                productEntity.setStock(transactionProductEntity.getStock() - transactionProductEntity.getQuantity());
             }
+
+            for(TransactionProductEntity transactionProductEntity : transactionProductEntityList){
+                productService.deductStock(transactionProductEntity.getPid(),transactionProductEntity.getQuantity());
+            }
+
+            transactionEntity.setStatus(TransactionStatus.PROCESSING);
+            transactionRepository.save(transactionEntity);
         }catch (Exception ex){
             logger.warn("Update Transaction Status: " + ex.getMessage());
             throw ex;
@@ -121,19 +129,19 @@ public class TransactionServiceImpl implements TransactionService {
         try{
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
             TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
+
             if(transactionEntity.getStatus() != TransactionStatus.PROCESSING){
                 throw new TransactionException("Status error");
             }
+
+            cartItemService.emptyUserCart(firebaseUserData.getFirebaseUid());
+
             transactionEntity.setStatus(TransactionStatus.SUCCESS);
             transactionRepository.save(transactionEntity);
 
-            Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
-            List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
-            for (TransactionProductEntity transactionProductEntity : transactionProductEntityList){
-                  cartItemService.deleteCartItem(firebaseUserData,transactionProductEntity.getPid());
-            }
-            TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity,transactionProductEntityList);
+            TransactionResponseData transactionResponseData = new TransactionResponseData(transactionEntity,transactionProductService.findTransactionProductList(transactionEntity));
             return transactionResponseData;
+
         }catch (Exception ex){
             logger.warn("Finish Transaction: " + ex.getMessage());
             throw ex;

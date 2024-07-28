@@ -17,4 +17,5 @@ public interface CartItemService {
 
     List<CartItemEntity> findAllByUser(UserEntity loginUser);
 
+    void emptyUserCart(String firebaseUid);
 }

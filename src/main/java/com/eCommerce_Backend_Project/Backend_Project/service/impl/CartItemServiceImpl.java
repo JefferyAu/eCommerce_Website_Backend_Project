@@ -146,9 +146,9 @@ public class CartItemServiceImpl implements CartItemService {
         return cartItemEntityList;
     }
 
-//    @Override
-//    @Transactional
-//    public void emptyUserCart(Integer uid){
-//        cartItemRepository.deleteAllByUid(uid);
-//    }
+    @Override
+    @Transactional
+    public void emptyUserCart(String firebaseUid){
+        cartItemRepository.deleteAllByUser_FirebaseUid(firebaseUid);
+    }
 }

@@ -12,4 +12,5 @@ public interface CartItemRepository extends CrudRepository<CartItemEntity, Integ
     Optional<CartItemEntity> findByProductAndUser(ProductEntity product, UserEntity user);
     List<CartItemEntity> findAllByUser(UserEntity userEntity);
     Optional<CartItemEntity> findByProduct(ProductEntity product);
+    void deleteAllByUser_FirebaseUid(String firebaseUid);
 }

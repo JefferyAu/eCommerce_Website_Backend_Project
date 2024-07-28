@@ -113,10 +113,6 @@ public class ProductServiceImpl implements ProductService {
                 throw new UserException("You don't have permission to update product");
             }
 
-//            if(findByProductName(data.getName())){
-//                throw new ProductException("Product name is already exist");
-//            }
-
             productEntity.setName(data.getName());
             productEntity.setDescription(data.getDescription());
             productEntity.setImageUrl(data.getImageUrl());
@@ -166,6 +162,19 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
+    @Override
+    public boolean deductStock(Integer pid, Integer quantity){
+        ProductEntity productEntity = findBypid(pid);
+
+        if(!isValidQuantity(pid,quantity)){
+            return false;
+        }
+
+        productEntity.setStock(productEntity.getStock() - quantity);
+        productRepository.save(productEntity);
+        return true;
+    }
+
     public boolean adminPermission(String uid){
         if (uid.equals("eVBvl8vc8jgFseJANOaZv04OnaX2")){
             return true;
@@ -173,4 +182,5 @@ public class ProductServiceImpl implements ProductService {
            return false;
         }
     }
+
 }

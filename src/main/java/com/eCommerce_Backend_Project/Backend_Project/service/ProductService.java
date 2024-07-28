@@ -15,4 +15,5 @@ public interface ProductService {
     ProductResponseData updateProduct(FirebaseUserData firebaseUserData, Integer pid, ProductRequestData data);
     ProductEntity findBypid(Integer id);
     boolean isValidQuantity(Integer pid, Integer quantity);
+    boolean deductStock(Integer pid, Integer quantity);
 }
