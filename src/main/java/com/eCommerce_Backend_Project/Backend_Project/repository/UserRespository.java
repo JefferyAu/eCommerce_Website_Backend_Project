@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UserRespository extends CrudRepository<UserEntity, Integer> {
     Optional<UserEntity> findByFirebaseUid(String firebaseUid);
+    Optional<UserEntity> findByUid(Integer uid);
 }

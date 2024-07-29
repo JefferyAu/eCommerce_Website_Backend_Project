@@ -4,6 +4,7 @@ import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.P
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.exception.ProductException;
 import com.eCommerce_Backend_Project.Backend_Project.exception.ProductNotFoundException;
 import com.eCommerce_Backend_Project.Backend_Project.exception.UserException;
@@ -59,7 +60,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseData addProduct(FirebaseUserData firebaseUserData,ProductRequestData data){
         try{
 
-        if (!adminPermission(firebaseUserData.getFirebaseUid())){
+       UserEntity userEntity = userService.getEntityByFirebaseUserData(firebaseUserData);
+
+        if (!userService.userPermission(userEntity.getUid())){
             throw new UserException("You don't have permission to add product");
         }
 
@@ -88,7 +91,9 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseData removeProduct(FirebaseUserData firebaseUserData,Integer pid){
         try {
 
-            if (!adminPermission(firebaseUserData.getFirebaseUid())){
+            UserEntity userEntity = userService.getEntityByFirebaseUserData(firebaseUserData);
+
+            if (!userService.userPermission(userEntity.getUid())){
                 throw new UserException("You don't have permission to remove product");
             }
 
@@ -108,8 +113,8 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseData updateProduct(FirebaseUserData firebaseUserData, Integer pid, ProductRequestData data){
         try{
             ProductEntity productEntity = findBypid(pid);
-
-            if(!adminPermission(firebaseUserData.getFirebaseUid())){
+            UserEntity userEntity = userService.getEntityByFirebaseUserData(firebaseUserData);
+            if(!userService.userPermission(userEntity.getUid())){
                 throw new UserException("You don't have permission to update product");
             }
 
@@ -175,12 +180,12 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
-    public boolean adminPermission(String uid){
-        if (uid.equals("eVBvl8vc8jgFseJANOaZv04OnaX2")){
-            return true;
-        }else {
-           return false;
-        }
-    }
+//    public boolean adminPermission(String uid){
+//        if (uid.equals("eVBvl8vc8jgFseJANOaZv04OnaX2")){
+//            return true;
+//        }else {
+//           return false;
+//        }
+//    }
 
 }

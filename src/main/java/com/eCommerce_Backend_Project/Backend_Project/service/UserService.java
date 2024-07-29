@@ -7,4 +7,6 @@ public interface UserService {
     UserEntity getEntityByFirebaseUserData(FirebaseUserData firebaseUserData);
 
     boolean getExistUserByFirebaseUserData(FirebaseUserData firebaseUserData);
+
+    boolean userPermission(Integer uid);
 }

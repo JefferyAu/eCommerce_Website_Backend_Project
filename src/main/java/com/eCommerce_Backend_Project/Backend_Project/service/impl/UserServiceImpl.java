@@ -1,6 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.service.impl;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.RolesTable;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.repository.UserRespository;
 import com.eCommerce_Backend_Project.Backend_Project.service.UserService;
@@ -36,5 +37,22 @@ public class UserServiceImpl implements UserService {
         }else {
             return false;
         }
+    }
+
+    @Override
+    public boolean userPermission(Integer uid){
+        Optional<UserEntity> userEntity = userRespository.findByUid(uid);
+        if(userEntity.isEmpty()){
+            return false;
+        }
+
+        UserEntity user = userEntity.get();
+
+        for(RolesTable rolesTable: user.getRoles()){
+            if("admin".equals(rolesTable.getRoleName())){
+                return true;
+            }
+        }
+        return false;
     }
 }
