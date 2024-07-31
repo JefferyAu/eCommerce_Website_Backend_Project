@@ -34,7 +34,7 @@ public class ProductApi {
 //            allProductResponseDtoList.add(allproductResponseDto);
 //        }
 //        return allProductResponseDtoList;
-//    }
+///    }
 
     @GetMapping("{id}")
     public ProductResponseDto getProductbyid(@PathVariable Integer id){
