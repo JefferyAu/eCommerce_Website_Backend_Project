@@ -27,7 +27,6 @@ public class UserEntity {
 
     private List<RolesTable> roles;
 
-
     public UserEntity() {
     }
 
