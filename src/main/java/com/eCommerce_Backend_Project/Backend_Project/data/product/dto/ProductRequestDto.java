@@ -13,7 +13,7 @@ public class ProductRequestDto {
     @JsonProperty("description")
     private String description;
 
-    @JsonProperty("image_url")
+//    @JsonProperty("image_url")
     private String imageUrl;
 
     @JsonProperty("price")
@@ -21,6 +21,9 @@ public class ProductRequestDto {
 
     @JsonProperty("stock")
     private Integer stock;
+
+    @JsonProperty("category")
+    private String category;
 
     public String getDescription() {
         return description;
@@ -60,5 +63,13 @@ public class ProductRequestDto {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

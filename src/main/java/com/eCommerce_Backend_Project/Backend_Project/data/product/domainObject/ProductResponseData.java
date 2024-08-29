@@ -13,6 +13,7 @@ public class ProductResponseData {
     private String imageUrl;
     private BigDecimal price;
     private Integer stock;
+    private String category;
 
     public ProductResponseData(ProductEntity entity){
         this.pid = entity.getPid();
@@ -21,6 +22,7 @@ public class ProductResponseData {
         this.imageUrl = entity.getImageUrl();
         this.price = entity.getPrice();
         this.stock = entity.getStock();
+        this.category = entity.getCategory();
     }
 
 
@@ -70,5 +72,13 @@ public class ProductResponseData {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

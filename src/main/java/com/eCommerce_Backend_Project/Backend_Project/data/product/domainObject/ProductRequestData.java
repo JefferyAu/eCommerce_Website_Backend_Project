@@ -17,12 +17,16 @@ public class ProductRequestData {
 
     private Integer stock;
 
+    private String category;
+
+
     public ProductRequestData(ProductRequestDto dto){
         this.name = dto.getName();
         this.description = dto.getDescription();
         this.imageUrl = dto.getImageUrl();
         this.price = dto.getPrice();
         this.stock = dto.getStock();
+        this.category = dto.getCategory();
     }
 
     public String getDescription() {
@@ -63,5 +67,13 @@ public class ProductRequestData {
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

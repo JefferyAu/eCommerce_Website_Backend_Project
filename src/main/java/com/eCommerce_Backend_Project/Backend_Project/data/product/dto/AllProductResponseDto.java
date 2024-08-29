@@ -11,6 +11,8 @@ public class AllProductResponseDto {
     private String imageUrl;
     private BigDecimal price;
     private boolean hasStock;
+    private String category;
+
 
     public  AllProductResponseDto(ProductResponseData data){
         this.pid = data.getPid();
@@ -18,6 +20,7 @@ public class AllProductResponseDto {
         this.description = data.getDescription();
         this.imageUrl = data.getImageUrl();
         this.price = data.getPrice();
+        this.category =data.getCategory();
         this.hasStock = data.getStock() > 0;
     }
 
@@ -67,5 +70,13 @@ public class AllProductResponseDto {
 
     public void setHasStock(boolean hasStock) {
         this.hasStock =hasStock;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

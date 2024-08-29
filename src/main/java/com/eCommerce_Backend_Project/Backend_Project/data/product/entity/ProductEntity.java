@@ -24,12 +24,14 @@ public class ProductEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "category",nullable = false)
+    private String category;
+
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
     @Column(name = "stock", nullable = false)
     private Integer stock;
-
 
     public ProductEntity(){
 
@@ -41,6 +43,7 @@ public class ProductEntity {
         this.imageUrl = data.getImageUrl();
         this.price = data.getPrice();
         this.stock = data.getStock();
+        this.category = data.getCategory();
     }
 
     public Integer getPid() {
@@ -86,7 +89,13 @@ public class ProductEntity {
     public Integer getStock() {
         return stock;
     }
+    public String getCategory() {
+        return category;
+    }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
     public void setStock(Integer stock) {
         this.stock = stock;
     }

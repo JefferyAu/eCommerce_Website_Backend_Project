@@ -76,6 +76,7 @@ public class ProductServiceImpl implements ProductService {
         productEntity.setImageUrl(data.getImageUrl());
         productEntity.setPrice(data.getPrice());
         productEntity.setStock(data.getStock());
+        productEntity.setCategory(data.getCategory());
         productRepository.save(productEntity);
 
         ProductResponseData productResponseData = new ProductResponseData(productEntity);
@@ -123,6 +124,7 @@ public class ProductServiceImpl implements ProductService {
             productEntity.setImageUrl(data.getImageUrl());
             productEntity.setPrice(data.getPrice());
             productEntity.setStock(data.getStock());
+            productEntity.setCategory(data.getCategory());
             productRepository.save(productEntity);
 
             ProductResponseData productResponseData = new ProductResponseData(productEntity);
