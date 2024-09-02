@@ -1,6 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.api;
 
 
+import com.eCommerce_Backend_Project.Backend_Project.config.DevConfig;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.domainObject.CartItemResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.dto.CartItemResponseDto;
 import com.eCommerce_Backend_Project.Backend_Project.data.cartItem.dto.SuccessCatItemResponseDto;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin({DevConfig.DEV_BASE_URL,DevConfig.PRO_BASE_RUL})
 @RequestMapping("/cart")
 public class CartItemApi {
     private final CartItemService cartItemService;

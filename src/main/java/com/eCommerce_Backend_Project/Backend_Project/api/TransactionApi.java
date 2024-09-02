@@ -1,6 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.api;
 
 
+import com.eCommerce_Backend_Project.Backend_Project.config.DevConfig;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObject.TransactionResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.dto.SuccessTransactionResponseDto;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.dto.TransactionResponseDto;
@@ -13,6 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin({DevConfig.DEV_BASE_URL,DevConfig.PRO_BASE_RUL})
 @RequestMapping("/transaction")
 public class TransactionApi {
 

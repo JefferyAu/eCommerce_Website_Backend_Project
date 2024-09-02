@@ -1,5 +1,6 @@
 package com.eCommerce_Backend_Project.Backend_Project.api;
 
+import com.eCommerce_Backend_Project.Backend_Project.config.DevConfig;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductRequestData;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.domainObject.ProductResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.product.dto.AllProductResponseDto;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin({DevConfig.DEV_BASE_URL,DevConfig.PRO_BASE_RUL})
 @RequestMapping("/public/product")
 public class ProductApi {
 
