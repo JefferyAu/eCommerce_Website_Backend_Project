@@ -1,6 +1,9 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.response;
 
+
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+
+import java.util.List;
 
 public class UserResponseDto {
     private String firebaseUid;

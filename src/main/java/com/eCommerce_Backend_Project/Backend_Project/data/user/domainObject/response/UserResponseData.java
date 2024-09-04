@@ -1,16 +1,22 @@
 package com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.response;
 
+import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.RolesTable;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
+
+import java.util.List;
 
 public class UserResponseData {
     private Integer uid;
     private  String firebaseUid;
     private String email;
 
+
+
     public UserResponseData(UserEntity entity){
         this.uid = entity.getUid();
         this.firebaseUid = entity.getFirebaseUid();
         this.email = entity.getEmail();
+
     }
 
     public Integer getUid() {
@@ -36,4 +42,5 @@ public class UserResponseData {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }

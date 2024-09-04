@@ -1,9 +1,11 @@
 package com.eCommerce_Backend_Project.Backend_Project.service.impl;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
+import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.response.UserResponseData;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.RolesTable;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import com.eCommerce_Backend_Project.Backend_Project.repository.UserRespository;
+import com.eCommerce_Backend_Project.Backend_Project.repository.UserRolesRepository;
 import com.eCommerce_Backend_Project.Backend_Project.service.UserService;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,11 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRespository userRespository;
+    private final UserRolesRepository userRolesRepository;
 
-    public UserServiceImpl(UserRespository userRespository) {
+    public UserServiceImpl(UserRespository userRespository, UserRolesRepository userRolesRepository) {
         this.userRespository = userRespository;
+        this.userRolesRepository = userRolesRepository;
     }
 
     @Override
@@ -37,6 +41,13 @@ public class UserServiceImpl implements UserService {
         }else {
             return false;
         }
+    }
+
+    @Override
+    public boolean getUserRoleStatus(FirebaseUserData firebaseUserData){
+        UserEntity userEntity = new UserEntity(firebaseUserData);
+        Optional<UserEntity> loginUser = userRespository.findByFirebaseUid(userEntity.getFirebaseUid());
+        return  userPermission(loginUser.get().getUid());
     }
 
     @Override
