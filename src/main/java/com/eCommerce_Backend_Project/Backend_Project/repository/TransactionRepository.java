@@ -4,9 +4,11 @@ import com.eCommerce_Backend_Project.Backend_Project.data.transaction.entity.Tra
 import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface TransactionRepository extends CrudRepository<TransactionEntity,Integer> {
     Optional<TransactionEntity> findByUserAndTid(UserEntity loginUser,Integer tid);
     Optional<TransactionEntity> findByTid(Integer tid);
+    List<TransactionEntity> findByUser(UserEntity loginUser);
 }

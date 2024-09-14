@@ -1,6 +1,7 @@
 package com.eCommerce_Backend_Project.Backend_Project.service.impl;
 
 import com.eCommerce_Backend_Project.Backend_Project.data.product.entity.ProductEntity;
+import com.eCommerce_Backend_Project.Backend_Project.data.transaction.domainObject.TransactionResponseListData;
 import com.eCommerce_Backend_Project.Backend_Project.data.transaction.status.TransactionStatus;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
 import com.eCommerce_Backend_Project.Backend_Project.data.user.entity.UserEntity;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,6 +90,27 @@ public class TransactionServiceImpl implements TransactionService {
             throw ex;
         }
 
+    }
+
+    @Override
+    public List<TransactionResponseListData> getAllTransactionRecord(FirebaseUserData firebaseUserData){
+        try{
+            UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
+            List<TransactionEntity> transactionEntityList = transactionRepository.findByUser(loginUser);
+
+            List<TransactionResponseListData> transactionResponseListDataList = new ArrayList<>();
+
+            for(TransactionEntity transactionEntity: transactionEntityList){
+                TransactionResponseListData transactionResponseListData = new TransactionResponseListData(transactionEntity);
+                transactionResponseListDataList.add(transactionResponseListData);
+            }
+
+            return transactionResponseListDataList;
+
+        }catch (Exception ex){
+            logger.warn("Get all transaction Details failed: " + ex.getMessage());
+            throw ex;
+        }
     }
 
     @Override
