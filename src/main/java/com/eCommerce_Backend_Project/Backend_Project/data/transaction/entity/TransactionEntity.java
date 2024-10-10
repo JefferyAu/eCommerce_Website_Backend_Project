@@ -30,6 +30,14 @@ public class TransactionEntity {
     @Column(name = "total", nullable = false)
     private BigDecimal total = BigDecimal.valueOf(0);
 
+    @Column(name= "Stripe_Session_Id")
+    private String stripeSessionId;
+
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
     public TransactionEntity(){
 
     }
@@ -75,6 +83,14 @@ public class TransactionEntity {
 
     public BigDecimal getTotal() {
         return total;
+    }
+
+    public String getStripeSessionId() {
+        return stripeSessionId;
+    }
+
+    public void setStripeSessionId(String stripeSessionId) {
+        this.stripeSessionId = stripeSessionId;
     }
 
     public void setTotal(List<CartItemEntity> cartItemEntityList) {

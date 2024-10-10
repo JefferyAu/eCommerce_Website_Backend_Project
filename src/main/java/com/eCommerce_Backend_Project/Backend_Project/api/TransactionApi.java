@@ -13,6 +13,7 @@ import com.eCommerce_Backend_Project.Backend_Project.data.transaction.dto.Transa
 import com.eCommerce_Backend_Project.Backend_Project.data.user.domainObject.request.FirebaseUserData;
 import com.eCommerce_Backend_Project.Backend_Project.service.TransactionService;
 import com.eCommerce_Backend_Project.Backend_Project.util.JwtUtil;
+import com.stripe.exception.StripeException;
 import jakarta.validation.constraints.Positive;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -65,14 +66,13 @@ public class TransactionApi {
 
 
     @PatchMapping("/{tid}/pay")
-    public SuccessTransactionResponseDto updateTransactionStatus(JwtAuthenticationToken jwt,@PathVariable @Positive Integer tid){
+    public String updateTransactionStatus(JwtAuthenticationToken jwt,@PathVariable @Positive Integer tid) throws StripeException {
         FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
-        transactionService.updateTransactionStatus(firebaseUserData,tid);
-        return new SuccessTransactionResponseDto();
+        return transactionService.updateTransactionStatus(firebaseUserData,tid);
     }
 
     @PatchMapping("/{tid}/finish")
-    public TransactionResponseDto finishTransaction(JwtAuthenticationToken jwt, @PathVariable @Positive Integer tid){
+    public TransactionResponseDto finishTransaction(JwtAuthenticationToken jwt, @PathVariable @Positive Integer tid) throws StripeException {
         FirebaseUserData firebaseUserData = JwtUtil.getFirebaseUserData(jwt);
         TransactionResponseData transactionResponseData = transactionService.finishTransaction(firebaseUserData,tid);
         TransactionResponseDto transactionResponseDto = new TransactionResponseDto(transactionResponseData);

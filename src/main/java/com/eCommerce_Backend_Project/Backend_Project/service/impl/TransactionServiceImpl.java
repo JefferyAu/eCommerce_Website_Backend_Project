@@ -13,6 +13,9 @@ import com.eCommerce_Backend_Project.Backend_Project.exception.TransactionExcept
 import com.eCommerce_Backend_Project.Backend_Project.repository.TransactionProductRepository;
 import com.eCommerce_Backend_Project.Backend_Project.repository.TransactionRepository;
 import com.eCommerce_Backend_Project.Backend_Project.service.*;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionProductService transactionProductService;
     private final TransactionProductRepository transactionProductRepository;
     private final ProductService productService;
+
 
     public TransactionServiceImpl(UserService userService,
                                   CartItemService cartItemService,
@@ -115,7 +119,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     @Transactional
-    public void updateTransactionStatus(FirebaseUserData firebaseUserData,Integer tid){
+    public String updateTransactionStatus(FirebaseUserData firebaseUserData,Integer tid) throws StripeException {
+
+        String YOUR_DOMAIN = "http://localhost:5173/";
+
         try{
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
             TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
@@ -127,28 +134,94 @@ public class TransactionServiceImpl implements TransactionService {
 
             Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
             List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
+            List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
 
             for (TransactionProductEntity transactionProductEntity : transactionProductEntityList){
                 ProductEntity productEntity = productService.findBypid(transactionProductEntity.getPid());
                 if(!productService.isValidQuantity(transactionProductEntity.getPid(),transactionProductEntity.getQuantity())){
                     throw new TransactionException(String.format("Not enough stock: Pid: %d Stock: %d",transactionProductEntity.getPid(),productEntity.getStock()));
                 }
+
+              lineItems.add(
+                    SessionCreateParams.LineItem.builder()
+                            .setQuantity(transactionProductEntity.getQuantity().longValue()) // 使用實際數量
+                            .setPrice(productEntity.getStripePriceID()) // 假設你有價格 ID
+                            .build()
+            );
             }
 
             for(TransactionProductEntity transactionProductEntity : transactionProductEntityList){
                 productService.deductStock(transactionProductEntity.getPid(),transactionProductEntity.getQuantity());
             }
 
+            // 創建結帳會話
+            SessionCreateParams params = SessionCreateParams.builder()
+                    .setMode(SessionCreateParams.Mode.PAYMENT) // 使用支付模式
+                    .setSuccessUrl(YOUR_DOMAIN + "thankyou")
+                    .setCancelUrl(YOUR_DOMAIN + "error")
+                    .addAllLineItem(lineItems) // 添加所有行項
+                    .build();
+
+            Session session = Session.create(params);
+
+            transactionEntity.setStripeSessionId(session.getId());
             transactionEntity.setStatus(TransactionStatus.PROCESSING);
             transactionRepository.save(transactionEntity);
+
+            return session.getUrl();
+
         }catch (Exception ex){
             logger.warn("Update Transaction Status: " + ex.getMessage());
             throw ex;
         }
     }
 
+//    @Override
+//    public String createCheckoutSession(FirebaseUserData firebaseUserData, Integer tid) {
+//        String YOUR_DOMAIN = "http://localhost:5173/";
+//        try {
+//        UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
+//        TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
+//
+//        Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
+//        List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
+//
+//
+//        // 建立會話的行項集合
+//             List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
+//
+//        for (TransactionProductEntity transactionProductEntity : transactionProductEntityList){
+//            ProductEntity productEntity = productService.findBypid(transactionProductEntity.getPid());
+//            if(!productService.isValidQuantity(transactionProductEntity.getPid(),transactionProductEntity.getQuantity())){
+//                throw new TransactionException(String.format("Not enough stock: Pid: %d Stock: %d",transactionProductEntity.getPid(),productEntity.getStock()));
+//            }
+//            // 將產品行項添加到行項列表中
+//            lineItems.add(
+//                    SessionCreateParams.LineItem.builder()
+//                            .setQuantity(1L) // 使用實際數量
+//                            .setPrice("price_1Q13ltBRyDFU5GVJxpnGTUc7") // 假設你有價格 ID
+//                            .build()
+//            );
+//        }
+//
+//            // 創建結帳會話
+//            SessionCreateParams params = SessionCreateParams.builder()
+//                    .setMode(SessionCreateParams.Mode.PAYMENT) // 使用支付模式
+//                    .setSuccessUrl(YOUR_DOMAIN + "thankyou")
+//                    .setCancelUrl(YOUR_DOMAIN + "error")
+//                    .addAllLineItem(lineItems) // 添加所有行項
+//                    .build();
+//
+//            Session session = Session.create(params);
+//            return session.getUrl();
+//
+//        } catch (Exception e) {
+//            throw new RuntimeException("Error creating session: " + e.getMessage(), e);
+//        }
+//    }
+
     @Override
-    public TransactionResponseData finishTransaction(FirebaseUserData firebaseUserData, Integer tid){
+    public TransactionResponseData finishTransaction(FirebaseUserData firebaseUserData, Integer tid) throws StripeException {
         try{
             UserEntity loginUser = userService.getEntityByFirebaseUserData(firebaseUserData);
             TransactionEntity transactionEntity = findTransactionUser(loginUser,tid);
@@ -156,6 +229,19 @@ public class TransactionServiceImpl implements TransactionService {
             if(transactionEntity.getStatus() != TransactionStatus.PROCESSING){
                 throw new TransactionException("Status error");
             }
+
+//            Session session = Session.retrieve(transactionEntity.getStripeSessionId());
+//
+//            if(!"complete".equals(session.getPaymentStatus())){
+//                throw new TransactionException("payment not yet finish");
+//            }
+
+//            Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
+//            List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
+//
+//            for(TransactionProductEntity transactionProductEntity : transactionProductEntityList){
+//                productService.deductStock(transactionProductEntity.getPid(),transactionProductEntity.getQuantity());
+//            }
 
             cartItemService.emptyUserCart(firebaseUserData.getFirebaseUid());
 

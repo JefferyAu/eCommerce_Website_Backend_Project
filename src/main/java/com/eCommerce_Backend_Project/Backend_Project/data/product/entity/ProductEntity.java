@@ -33,6 +33,10 @@ public class ProductEntity {
     @Column(name = "stock", nullable = false)
     private Integer stock;
 
+    @Column(name = "stripe_price_id")
+    private String StripePriceID;
+
+
     public ProductEntity(){
 
     }
@@ -98,5 +102,13 @@ public class ProductEntity {
     }
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public String getStripePriceID() {
+        return StripePriceID;
+    }
+
+    public void setStripePriceID(String stripePriceID) {
+        StripePriceID = stripePriceID;
     }
 }
