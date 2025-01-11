@@ -150,14 +150,10 @@ public class TransactionServiceImpl implements TransactionService {
             );
             }
 
-            for(TransactionProductEntity transactionProductEntity : transactionProductEntityList){
-                productService.deductStock(transactionProductEntity.getPid(),transactionProductEntity.getQuantity());
-            }
-
             // 創建結帳會話
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.PAYMENT) // 使用支付模式
-                    .setSuccessUrl(YOUR_DOMAIN + "thankyou")
+                    .setSuccessUrl(YOUR_DOMAIN + "thankyou/" + transactionTid.get().getTid())
                     .setCancelUrl(YOUR_DOMAIN + "error")
                     .addAllLineItem(lineItems) // 添加所有行項
                     .build();
@@ -230,18 +226,19 @@ public class TransactionServiceImpl implements TransactionService {
                 throw new TransactionException("Status error");
             }
 
+
 //            Session session = Session.retrieve(transactionEntity.getStripeSessionId());
 //
 //            if(!"complete".equals(session.getPaymentStatus())){
 //                throw new TransactionException("payment not yet finish");
 //            }
 
-//            Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
-//            List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
-//
-//            for(TransactionProductEntity transactionProductEntity : transactionProductEntityList){
-//                productService.deductStock(transactionProductEntity.getPid(),transactionProductEntity.getQuantity());
-//            }
+            Optional<TransactionEntity> transactionTid = transactionRepository.findByTid(tid);
+            List<TransactionProductEntity> transactionProductEntityList = transactionProductService.findTransactionProductList(transactionTid.get());
+
+            for(TransactionProductEntity transactionProductEntity : transactionProductEntityList){
+                productService.deductStock(transactionProductEntity.getPid(),transactionProductEntity.getQuantity());
+            }
 
             cartItemService.emptyUserCart(firebaseUserData.getFirebaseUid());
 
