@@ -18,7 +18,12 @@ import java.util.List;
 
 @RestController
 //@CrossOrigin({EnvConfig.DEV_BASE_URL, EnvConfig.PRO_BASE_RUL})
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(
+        origins = {"https://shop.betasolution.online", "http://localhost:5173"},
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
+        allowCredentials = "true"
+)
 @RequestMapping("/cart")
 public class CartItemApi {
     private final CartItemService cartItemService;

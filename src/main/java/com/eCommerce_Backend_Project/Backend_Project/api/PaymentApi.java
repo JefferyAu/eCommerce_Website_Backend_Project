@@ -11,7 +11,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/public/api")
 //@CrossOrigin({EnvConfig.DEV_BASE_URL, EnvConfig.PRO_BASE_RUL})
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(
+        origins = {"https://shop.betasolution.online", "http://localhost:5173"},
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
+        allowCredentials = "true"
+)
 public class PaymentApi {
     private final TransactionService transactionService;
 
