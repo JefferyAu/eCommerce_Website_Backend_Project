@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin({EnvConfig.DEV_BASE_URL, EnvConfig.PRO_BASE_RUL})
+//@CrossOrigin({EnvConfig.DEV_BASE_URL, EnvConfig.PRO_BASE_RUL})
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/transaction")
 public class TransactionApi {
 
