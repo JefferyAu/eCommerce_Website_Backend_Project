@@ -157,7 +157,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return false;
     }
-
+    // is valid Quantity
     @Override
     public boolean isValidQuantity(Integer pid, Integer quantity){
         ProductEntity productEntity = findBypid(pid);
